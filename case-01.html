@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Request-to-Project Automation</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: single reading column, case-study sections, one wide Fusion-style scenario diagram */
+:root {
+  --bg: #F6F8FB;
+  --surface: #FFFFFF;
+  --ink: #14243A;
+  --muted: #56657A;
+  --line: #D8E0EA;
+  --navy: #1F3A5F;
+  --accent: #2E6DA4;
+  --accent-soft: #E3EDF7;
+  --wf: #F26B1D;        /* Workfront-ish orange for module bubbles */
+  --wf-soft: #FDEBDD;
+  --ok: #1E7B4F;
+  --ok-soft: #E2F3EA;
+  --warn: #B4471F;
+  --warn-soft: #FBE7DF;
+  --canvas: #0F1E33; --canvas-ink: #EAF1FA; --canvas-muted: #8FA3BD; --canvas-dot: #23395A; --live: #33C27F;
+  --font-display: "Bricolage Grotesque", "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E1622; --surface: #152132; --ink: #E6EDF6; --muted: #9AABC0; --line: #263649;
+    --navy: #9CC2EA; --accent: #6FA8DC; --accent-soft: #1B2D44;
+    --wf: #FF8A4C; --wf-soft: #3A2418; --ok: #5CC795; --ok-soft: #15301F; --warn: #F08A64; --warn-soft: #3A1E15;
+    --canvas: #08111F; --canvas-ink: #EAF1FA; --canvas-muted: #8FA3BD; --canvas-dot: #1A2B45; --live: #46D392;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --canvas: #08111F; --canvas-ink: #EAF1FA; --canvas-muted: #8FA3BD; --canvas-dot: #1A2B45; --live: #46D392;
+  --bg: #0E1622; --surface: #152132; --ink: #E6EDF6; --muted: #9AABC0; --line: #263649;
+  --navy: #9CC2EA; --accent: #6FA8DC; --accent-soft: #1B2D44;
+  --wf: #FF8A4C; --wf-soft: #3A2418; --ok: #5CC795; --ok-soft: #15301F; --warn: #F08A64; --warn-soft: #3A1E15;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; padding-block: env(safe-area-inset-top, 0px) env(safe-area-inset-bottom, 0px); }
+.back { font-size: .9rem; font-weight: 600; text-decoration: none; }
+.back:hover { text-decoration: underline; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.65;
+}
+.gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.inner { max-width: 860px; margin: 0 auto; }
+.wrap > .inner { padding-block: 64px; display: grid; gap: 64px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; color: var(--ink); }
+p { margin: 0; max-width: 68ch; }
+a { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* top bar */
+.top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+.me { display: flex; flex-direction: column; }
+.me b { font-size: 1.05rem; letter-spacing: .01em; }
+.me span { color: var(--muted); font-size: .9rem; }
+.links { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: .9rem; color: var(--muted); }
+.links code { font-family: var(--font-mono); font-size: .82rem; color: var(--ink); user-select: all; }
+
+/* hero */
+.hero { display: grid; gap: 18px; }
+.eyebrow { font-family: var(--font-mono); font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--wf); font-weight: 600; }
+.hero h1 { font-size: clamp(2rem, 5vw, 3rem); line-height: 1.12; font-weight: 800; color: var(--navy); }
+.lede { font-size: 1.15rem; color: var(--muted); }
+.meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin-top: 8px; }
+.meta div { background: var(--surface); padding: 14px 16px; display: grid; gap: 2px; min-width: 0; }
+.meta dt { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.meta dd { margin: 0; font-weight: 600; font-size: .95rem; }
+.stats { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 4px; }
+.stat { display: grid; }
+.stat b { font-size: 2rem; font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; line-height: 1.1; }
+.stat span { font-size: .85rem; color: var(--muted); }
+
+/* sections */
+section { display: grid; gap: 16px; }
+section > h2 { font-size: 1.45rem; font-weight: 700; display: flex; align-items: baseline; gap: 12px; }
+section > h2 small { font-family: var(--font-mono); font-size: .75rem; color: var(--muted); font-weight: 400; }
+
+/* before / after */
+.ba { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.ba > div { padding: 18px 20px; border-radius: 10px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.ba .before { background: var(--warn-soft); }
+.ba .after { background: var(--ok-soft); }
+.ba h3 { font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; }
+.ba .before h3 { color: var(--warn); }
+.ba .after h3 { color: var(--ok); }
+.ba ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+
+/* scenarios list */
+.scen { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.scen article { display: grid; grid-template-columns: 2.4rem 1fr auto; gap: 4px 14px; padding: 16px 0; border-bottom: 1px solid var(--line); align-items: start; }
+.bubble { width: 2.2rem; height: 2.2rem; border-radius: 50%; background: var(--wf-soft); color: var(--wf); display: grid; place-items: center; font-family: var(--font-mono); font-weight: 600; font-size: .85rem; }
+.scen h3 { font-size: 1.02rem; font-weight: 700; }
+.scen p { grid-column: 2 / 4; color: var(--muted); font-size: .95rem; }
+.pill { font-size: .72rem; font-weight: 600; padding: 3px 10px; border-radius: 99px; white-space: nowrap; }
+.pill.live { background: var(--ok-soft); color: var(--ok); }
+.pill.retired { background: var(--line); color: var(--muted); }
+
+/* diagram */
+.diagram { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; overflow-x: auto; }
+.diagram svg { display: block; min-width: 760px; width: 100%; height: auto; }
+.diagram svg text { font-family: var(--font-body); }
+.cap { font-size: .85rem; color: var(--muted); }
+
+/* decisions */
+.dec { display: grid; gap: 14px; }
+.dec article { display: grid; gap: 6px; padding: 18px 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.dec h3 { font-size: 1.02rem; }
+.dec code, .mono { font-family: var(--font-mono); font-size: .85em; background: var(--accent-soft); color: var(--navy); padding: 1px 6px; border-radius: 4px; }
+
+/* mapping sample */
+.tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; min-width: 520px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+th { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+tr:last-child td { border-bottom: 0; }
+td.id { font-family: var(--font-mono); font-size: .8rem; color: var(--muted); }
+
+.note { font-size: .85rem; color: var(--muted); border-left: 3px solid var(--line); padding-left: 12px; }
+footer { border-top: 1px solid var(--line); padding-top: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; color: var(--muted); font-size: .9rem; }
+
+@media (max-width: 520px) {
+  .scen article { grid-template-columns: 2.4rem 1fr; }
+  .scen .pill { grid-column: 2; justify-self: start; }
+  .scen p { grid-column: 1 / -1; }
+}
+
+/* ---- canvas hero ---- */
+.hero-band { background-color: var(--canvas); color: var(--canvas-ink); background-image: radial-gradient(var(--canvas-dot) 1.2px, transparent 1.3px); background-size: 22px 22px; padding-block: 24px 72px; }
+.hero-band .inner { display: grid; gap: 22px; }
+.hero-band .top { color: var(--canvas-muted); }
+.hero-band .me span { color: var(--canvas-muted); }
+.hero-band .back { color: var(--canvas-ink); }
+.hero-band .links { color: var(--canvas-muted); }
+.hero-band .links code { color: var(--canvas-ink); }
+.hero-band .links a { color: var(--canvas-ink); }
+.hero-band .eyebrow { color: var(--wf); margin-top: 28px; }
+.hero-band h1 { color: var(--canvas-ink); font-size: clamp(2.3rem, 6vw, 3.8rem); line-height: 1.02; font-weight: 800; }
+.hero-band h1 em { font-style: normal; color: var(--wf); }
+.hero-band .lede { color: var(--canvas-muted); }
+.hero-band .meta { background: var(--canvas-dot); border-color: var(--canvas-dot); }
+.hero-band .meta div { background: rgba(255,255,255,.03); }
+.hero-band .meta dt { color: var(--canvas-muted); }
+.hero-band .meta dd { color: var(--canvas-ink); }
+.strip { margin-top: -36px; position: relative; }
+.strip .stats { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; box-shadow: 0 12px 30px -18px rgba(15,30,51,.45); margin: 0 auto; }
+.strip .stat { padding: 18px 20px; border-right: 1px solid var(--line); min-width: 0; }
+.strip .stat:last-child { border-right: 0; }
+.strip .stat b { font-family: var(--font-display); font-size: 2.2rem; color: var(--navy); }
+section > h2 { font-size: clamp(1.5rem, 3.4vw, 2rem); font-weight: 800; }
+.diagram { background-color: var(--canvas); background-image: radial-gradient(var(--canvas-dot) 1.2px, transparent 1.3px); background-size: 20px 20px; border: 0; border-radius: 16px; padding: 20px; }
+.diagram .lbl { fill: var(--canvas-ink); font-weight: 700; font-size: 13px; }
+.diagram .sub { fill: var(--canvas-muted); font-size: 11px; }
+.diagram .wire { fill: none; stroke: var(--canvas-muted); stroke-width: 2; stroke-dasharray: 2 7; stroke-linecap: round; }
+.bundle { fill: var(--wf); }
+.bubble { background: var(--wf); color: #fff; }
+@media (prefers-reduced-motion: reduce) { .bundle { display: none; } }
+@media (max-width: 640px) {
+  .strip .stats { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .strip .stat:nth-child(2) { border-right: 0; }
+  .strip .stat:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+}
+</style>
+<script>
+try { history.scrollRestoration = 'manual'; } catch (e) {}
+(function () {
+  function top() { window.scrollTo(0, 0); }
+  top();
+  document.addEventListener('DOMContentLoaded', top);
+  window.addEventListener('load', function () { top(); setTimeout(top, 60); setTimeout(top, 250); });
+})();
+</script>
+</head>
+<body>
+
+<div class="hero-band gutter">
+<div class="inner">
+<header class="top">
+    <div class="me">
+      <a class="back" href="index.html">← Syarizan Aziz</a>
+      <span>Marketing Operations &amp; Automation</span>
+    </div>
+    <div class="links">
+      <span>Email <code>syarizanaziz99@gmail.com</code></span>
+      <a href="https://linkedin.com/in/syarizan-aziz" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </header>
+<div class="eyebrow">Case study 01 · Adobe Workfront Fusion</div>
+    <h1>Turning marketing requests into ready-to-run projects, <em>automatically.</em></h1>
+    <p class="lede">A set of Adobe Workfront Fusion scenarios that replaced daily manual project setup for a US enterprise marketing team. Every new request now becomes a project with the right brief form and task template attached.</p>
+    <dl class="meta">
+      <div><dt>My role</dt><dd>Built and documented</dd></div>
+      <div><dt>Client</dt><dd>US enterprise software company</dd></div>
+      <div><dt>Tools</dt><dd>Adobe Workfront, Adobe Workfront Fusion</dd></div>
+      <div><dt>Status</dt><dd>Live in production</dd></div>
+    </dl>
+    </div>
+</div>
+<div class="strip gutter"><div class="inner"><div class="stats">
+      <div class="stat"><b>20–30</b><span>requests per week</span></div>
+      <div class="stat"><b>20+</b><span>request types mapped</span></div>
+      <div class="stat"><b>5</b><span>Fusion scenarios built</span></div>
+      <div class="stat"><b>3</b><span>routing paths</span></div>
+    </div></div></div>
+<div class="wrap gutter">
+<div class="inner">
+
+  <section>
+    <h2>The problem</h2>
+    <p>The marketing team submits intake requests in Adobe Workfront for emails, webinars, digital ads, videos, web pages and more. Each request had to be converted into a project by hand, then given the right brief form and task template for its type.</p>
+    <div class="ba">
+      <div class="before">
+        <h3>Before</h3>
+        <ul>
+          <li>Repetitive conversion work every single day.</li>
+          <li>On busy days, requests with later due dates were pushed back so urgent ones could go first.</li>
+          <li>Stakeholders waited for their project to be set up.</li>
+          <li>Picking the wrong form or template meant rework later.</li>
+        </ul>
+      </div>
+      <div class="after">
+        <h3>After</h3>
+        <ul>
+          <li>Requests convert into projects automatically as they come in.</li>
+          <li>The correct brief form and template are attached for each request type.</li>
+          <li>Project managers only review the project and adjust what is needed.</li>
+          <li>No request is missed. The team only steps in when an error is flagged.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>How the main scenario works</h2>
+    <div class="diagram" role="img" aria-label="Flow diagram: a new request triggers Fusion, which reads the request, routes it by request queue into a standard, website, or translation path, looks up the matching form and template, creates the project, then links it back and notifies the team. If a template is missing, Fusion creates an issue and tags the project owner.">
+      <svg viewBox="0 0 1030 420" xmlns="http://www.w3.org/2000/svg">
+        <path id="p1" class="wire" d="M92 210 H150"/>
+        <path id="p2" class="wire" d="M222 210 H280"/>
+        <path id="p3" class="wire" d="M352 210 C390 210 390 90 420 90"/>
+        <path id="p4" class="wire" d="M352 210 H420"/>
+        <path id="p5" class="wire" d="M352 210 C390 210 390 330 420 330"/>
+        <path id="p6" class="wire" d="M516 90 H556"/>
+        <path id="p7" class="wire" d="M628 90 H668"/>
+        <path id="p8" class="wire" d="M740 90 H846 Q866 90 866 110 V172"/>
+        <path id="p9" class="wire" d="M516 210 H828"/>
+        <path id="p10" class="wire" d="M516 330 H846 Q866 330 866 310 V248"/>
+        <path d="M704 126 V156" fill="none" stroke="var(--wf)" stroke-width="1.6" stroke-dasharray="5 4"/>
+        <g font-size="13" text-anchor="middle" font-family="Plus Jakarta Sans, system-ui, sans-serif">
+          <circle cx="56" cy="210" r="36" fill="var(--wf)"/>
+          <text x="56" y="206" fill="#fff" font-weight="700">New</text>
+          <text x="56" y="222" fill="#fff" font-weight="700">request</text>
+          <text class="sub" x="56" y="268">Webhook trigger</text>
+
+          <circle cx="186" cy="210" r="36" fill="var(--wf)"/>
+          <text x="186" y="206" fill="#fff" font-weight="700">Read</text>
+          <text x="186" y="222" fill="#fff" font-weight="700">details</text>
+          <text class="sub" x="186" y="268">Queue, requestor, fields</text>
+
+          <circle cx="316" cy="210" r="36" fill="none" stroke="var(--canvas-muted)" stroke-width="2"/>
+          <text class="lbl" x="316" y="214">Router</text>
+          <text class="sub" x="316" y="268">Split by request queue</text>
+
+          <rect x="420" y="66" width="96" height="48" rx="24" fill="none" stroke="var(--canvas-muted)" stroke-width="2"/>
+          <text class="lbl" x="468" y="94">Standard</text>
+          <text class="sub" x="468" y="52">Marketing &amp; non-marketing</text>
+
+          <rect x="420" y="186" width="96" height="48" rx="24" fill="none" stroke="var(--canvas-muted)" stroke-width="2"/>
+          <text class="lbl" x="468" y="214">Website</text>
+          <text class="sub" x="468" y="252">Bug fix or asset removal</text>
+
+          <rect x="420" y="306" width="96" height="48" rx="24" fill="none" stroke="var(--canvas-muted)" stroke-width="2"/>
+          <text class="lbl" x="468" y="334">Translation</text>
+          <text class="sub" x="468" y="372">Fixed template</text>
+
+          <circle cx="592" cy="90" r="36" fill="var(--wf)"/>
+          <text x="592" y="86" fill="#fff" font-weight="700">Loop</text>
+          <text x="592" y="102" fill="#fff" font-weight="700">types</text>
+          <text class="sub" x="592" y="144">Each request type</text>
+
+          <circle cx="704" cy="90" r="36" fill="#2E6DA4"/>
+          <text x="704" y="86" fill="#fff" font-weight="700">Data</text>
+          <text x="704" y="102" fill="#fff" font-weight="700">Store</text>
+          <text class="sub" x="704" y="40">Look up form + template</text>
+
+          <rect x="629" y="156" width="150" height="42" rx="8" fill="var(--canvas)" stroke="var(--wf)" stroke-width="1.5"/>
+          <text x="704" y="174" fill="var(--wf)" font-weight="700" font-size="11.5">Template missing?</text>
+          <text x="704" y="190" fill="var(--canvas-ink)" font-size="11">Create issue, tag owner</text>
+
+          <circle cx="866" cy="210" r="38" fill="var(--live)"/>
+          <text x="866" y="206" fill="#fff" font-weight="700">Project</text>
+          <text x="866" y="222" fill="#fff" font-weight="700">ready</text>
+          <text class="sub" x="916" y="196" text-anchor="start">Link back to request</text>
+          <text class="sub" x="916" y="213" text-anchor="start">Notify team</text>
+          <text class="sub" x="916" y="230" text-anchor="start">Close setup tasks</text>
+        </g>
+        <circle class="bundle" r="5" visibility="hidden"><set attributeName="visibility" to="visible" begin="0s"/><animateMotion dur="1.6s" begin="0s" repeatCount="indefinite"><mpath href="#p1"/></animateMotion></circle>
+        <circle class="bundle" r="5" visibility="hidden"><set attributeName="visibility" to="visible" begin="0.5s"/><animateMotion dur="1.6s" begin="0.5s" repeatCount="indefinite"><mpath href="#p2"/></animateMotion></circle>
+        <circle class="bundle" r="5" visibility="hidden"><set attributeName="visibility" to="visible" begin="1s"/><animateMotion dur="1.6s" begin="1s" repeatCount="indefinite"><mpath href="#p3"/></animateMotion></circle>
+        <circle class="bundle" r="5" visibility="hidden"><set attributeName="visibility" to="visible" begin="1s"/><animateMotion dur="1.6s" begin="1s" repeatCount="indefinite"><mpath href="#p4"/></animateMotion></circle>
+        <circle class="bundle" r="5" visibility="hidden"><set attributeName="visibility" to="visible" begin="1s"/><animateMotion dur="1.6s" begin="1s" repeatCount="indefinite"><mpath href="#p5"/></animateMotion></circle>
+        <circle class="bundle" r="5" visibility="hidden"><set attributeName="visibility" to="visible" begin="1.5s"/><animateMotion dur="1.6s" begin="1.5s" repeatCount="indefinite"><mpath href="#p6"/></animateMotion></circle>
+        <circle class="bundle" r="5" visibility="hidden"><set attributeName="visibility" to="visible" begin="2s"/><animateMotion dur="1.6s" begin="2s" repeatCount="indefinite"><mpath href="#p7"/></animateMotion></circle>
+        <circle class="bundle" r="5" visibility="hidden"><set attributeName="visibility" to="visible" begin="2.5s"/><animateMotion dur="1.6s" begin="2.5s" repeatCount="indefinite"><mpath href="#p8"/></animateMotion></circle>
+        <circle class="bundle" r="5" visibility="hidden"><set attributeName="visibility" to="visible" begin="1.5s"/><animateMotion dur="1.6s" begin="1.5s" repeatCount="indefinite"><mpath href="#p9"/></animateMotion></circle>
+        <circle class="bundle" r="5" visibility="hidden"><set attributeName="visibility" to="visible" begin="1.5s"/><animateMotion dur="1.6s" begin="1.5s" repeatCount="indefinite"><mpath href="#p10"/></animateMotion></circle>
+      </svg>
+    </div>
+    <p class="cap">Redrawn from my original Visio documentation. Client names, people and system IDs are removed.</p>
+  </section>
+
+  <section>
+    <h2>What I built <small>5 scenarios</small></h2>
+    <div class="scen">
+      <article>
+        <div class="bubble">1</div>
+        <h3>Auto Convert Requests to Projects</h3><span class="pill live">Live</span>
+        <p>The main flow. Converts each new request into a project, routes it down one of three paths by request queue, attaches the matching brief form and template, links the project back to the request and notifies the team.</p>
+      </article>
+      <article>
+        <div class="bubble">2</div>
+        <h3>Attach Additional Templates</h3><span class="pill live">Live</span>
+        <p>Lets a project manager add more work to a live project. They pick extra request types and set one field to Yes. Fusion appends the matching templates without touching the existing tasks.</p>
+      </article>
+      <article>
+        <div class="bubble">3</div>
+        <h3>Attach Activation Plan Templates</h3><span class="pill live">Live</span>
+        <p>When a project has an activation plan, Fusion loops through every selected channel (paid social, email nurture, events and more), attaches each template, and posts one combined update instead of many.</p>
+      </article>
+      <article>
+        <div class="bubble">4</div>
+        <h3>Sync Late Documents to Projects</h3><span class="pill live">Live</span>
+        <p>Files uploaded to a request after it became a project are copied into the project automatically, and the project owner is tagged with a link. No late assets get missed.</p>
+      </article>
+      <article>
+        <div class="bubble">5</div>
+        <h3>Request Routing and Assignment (v1)</h3><span class="pill retired">Retired</span>
+        <p>The earlier version. It assigned people by request type and used a Data Store check so no request was processed twice. It was replaced by the conversion flow above, which handles the same job in one place.</p>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <h2>Key decisions</h2>
+    <div class="dec">
+      <article>
+        <h3>Keep the mapping in a table, not inside the scenario</h3>
+        <p>Each request type points to its brief form and task template in a Fusion Data Store. When the team adds a new request type or changes a template, they update one row. Nobody has to edit the scenario logic.</p>
+      </article>
+      <article>
+        <h3>Fail safely instead of stopping</h3>
+        <p>If a mapped template has been deleted, Fusion creates an issue on the project, assigns it to the project owner and tags the team with the template name. The rest of the run continues. Known harmless errors, like a form that is already attached, are ignored. Repeated unexpected failures still stop the scenario after <code>maxErrors: 3</code>.</p>
+      </article>
+      <article>
+        <h3>Handle the exceptions in their own path</h3>
+        <p>Website fixes, asset removals and translations each get their own path with a fixed template. A narrow override covers one request type from specific senders who need a different template. The common case stays simple.</p>
+      </article>
+      <article>
+        <h3>Write it down for handover</h3>
+        <p>I documented every scenario with its purpose, a module-by-module breakdown and its error handling, plus a mapping sheet and a flow diagram. The team can maintain it without me.</p>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <h2>Sample of the mapping</h2>
+    <p>A few rows from the request-type mapping I maintained. IDs are shortened placeholders.</p>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Request type</th><th>Brief form</th><th>Task template</th><th>Template ID</th></tr></thead>
+        <tbody>
+          <tr><td>Email</td><td>Email Brief</td><td>Email</td><td class="id">tmpl_••••01</td></tr>
+          <tr><td>Webinar</td><td>Webinar Brief</td><td>Webinar</td><td class="id">tmpl_••••02</td></tr>
+          <tr><td>Digital Ad</td><td>Digital Ad Brief</td><td>Digital Ad – Dynamic</td><td class="id">tmpl_••••03</td></tr>
+          <tr><td>Video</td><td>Video Brief</td><td>Video – Scripted Animation</td><td class="id">tmpl_••••04</td></tr>
+          <tr><td>Webpage</td><td>Webpage Brief</td><td>Web Page</td><td class="id">tmpl_••••05</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <p class="note">This work was done for a client during my time at 2X Marketing. Client name, people, links and system IDs have been removed or replaced.</p>
+
+  <footer>
+    <span>Syarizan Aziz · Marketing Operations &amp; Automation</span>
+    <a href="index.html">Back to all work</a>
+  </footer>
+</div>
+</div>
+
+</body>
+</html>

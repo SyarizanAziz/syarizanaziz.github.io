@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Syarizan Aziz, Marketing Operations & Automation Specialist. Case studies in Adobe Workfront Fusion automation and website optimization.">
+<title>Syarizan Aziz Portfolio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: dark "scenario canvas" hero with a live flow, then stats strip, work, toolkit, background, contact */
+:root {
+  --bg: #F5F7FA;
+  --surface: #FFFFFF;
+  --ink: #13233A;
+  --muted: #5A687C;
+  --line: #D9E1EB;
+  --navy: #1F3A5F;
+  --accent: #2E6DA4;
+  --accent-soft: #E3EDF7;
+  --fusion: #F26B1D;
+  --fusion-soft: #FDECE0;
+  --canvas: #0F1E33;
+  --canvas-ink: #EAF1FA;
+  --canvas-muted: #8FA3BD;
+  --canvas-dot: #23395A;
+  --live: #33C27F;
+  --font-display: "Bricolage Grotesque", "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0B1626; --surface: #13223A; --ink: #E6EDF6; --muted: #98A9BF; --line: #24364F;
+    --navy: #A7C8EC; --accent: #74AEE2; --accent-soft: #1A2D47; --fusion: #FF8B4D; --fusion-soft: #3A2316;
+    --canvas: #08111F; --canvas-ink: #EAF1FA; --canvas-muted: #8FA3BD; --canvas-dot: #1A2B45; --live: #46D392;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0B1626; --surface: #13223A; --ink: #E6EDF6; --muted: #98A9BF; --line: #24364F;
+  --navy: #A7C8EC; --accent: #74AEE2; --accent-soft: #1A2D47; --fusion: #FF8B4D; --fusion-soft: #3A2316;
+  --canvas: #08111F; --canvas-ink: #EAF1FA; --canvas-muted: #8FA3BD; --canvas-dot: #1A2B45; --live: #46D392;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.65; }
+.gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.inner { max-width: 1040px; margin: 0 auto; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+p { margin: 0; max-width: 64ch; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--fusion); outline-offset: 3px; border-radius: 6px; }
+.mono { font-family: var(--font-mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 600; }
+
+/* ---------- HERO: scenario canvas ---------- */
+.hero { background-color: var(--canvas); color: var(--canvas-ink);
+  background-image: radial-gradient(var(--canvas-dot) 1.2px, transparent 1.3px); background-size: 22px 22px;
+  padding-block: 28px 56px; }
+.bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; color: var(--canvas-muted); }
+.status { display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px; border: 1px solid var(--canvas-dot); border-radius: 99px; color: var(--canvas-ink); background: rgba(255,255,255,.03); }
+.status i { width: 8px; height: 8px; border-radius: 50%; background: var(--live); box-shadow: 0 0 0 0 var(--live); animation: pulse 2s infinite; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(51,194,127,.6); } 70% { box-shadow: 0 0 0 9px rgba(51,194,127,0); } 100% { box-shadow: 0 0 0 0 rgba(51,194,127,0); } }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 32px; align-items: center; margin-top: 44px; }
+.hero h1 { font-size: clamp(2.8rem, 8vw, 5.4rem); line-height: .95; font-weight: 800; color: var(--canvas-ink); }
+.hero h1 span { color: var(--fusion); }
+.hero .role { margin-top: 18px; font-size: 1.2rem; font-weight: 700; color: var(--canvas-ink); }
+.hero .lead { margin-top: 12px; color: var(--canvas-muted); font-size: 1.05rem; }
+.hero .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 99px; font-weight: 700; text-decoration: none; font-size: .95rem; }
+.btn.primary { background: var(--fusion); color: #fff; }
+.btn.ghost { border: 1px solid var(--canvas-muted); color: var(--canvas-ink); }
+.btn:hover { filter: brightness(1.08); }
+.flow { width: 100%; height: auto; display: block; }
+.flow text { font-family: var(--font-body); }
+.flow .lbl { font-size: 13px; font-weight: 700; fill: var(--canvas-ink); }
+.flow .sub { font-size: 11px; fill: var(--canvas-muted); font-family: var(--font-mono); }
+.flow .wire { fill: none; stroke: var(--canvas-muted); stroke-width: 2; stroke-dasharray: 2 7; stroke-linecap: round; opacity: .7; }
+.bundle { fill: var(--fusion); }
+@media (prefers-reduced-motion: reduce) { .bundle { display: none; } .status i { animation: none; } }
+
+/* ---------- STATS ---------- */
+.stats { margin-top: -28px; position: relative; }
+.stats-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; box-shadow: 0 12px 30px -18px rgba(15,30,51,.45); }
+.stat { padding: 20px 22px; display: grid; gap: 2px; border-right: 1px solid var(--line); min-width: 0; }
+.stat:last-child { border-right: 0; }
+.stat b { font-family: var(--font-display); font-size: 2.3rem; line-height: 1; color: var(--navy); font-variant-numeric: tabular-nums; }
+.stat span { font-size: .85rem; color: var(--muted); }
+
+/* ---------- SECTIONS ---------- */
+main { padding-block: 72px 64px; }
+main > .inner { display: grid; gap: 80px; }
+.sec-head { display: grid; gap: 6px; margin-bottom: 24px; }
+.sec-head .mono { color: var(--fusion); }
+.sec-head h2 { font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 800; color: var(--ink); }
+
+/* case card */
+.case { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); background: var(--surface); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; text-decoration: none; color: inherit; transition: transform .25s, box-shadow .25s, border-color .25s; }
+.case:hover { transform: translateY(-3px); border-color: var(--fusion); box-shadow: 0 18px 40px -24px rgba(15,30,51,.5); }
+.case .txt { padding: 32px; display: grid; gap: 14px; align-content: start; }
+.case .num { font-family: var(--font-display); font-weight: 800; font-size: 3.4rem; line-height: 1; color: var(--fusion); }
+.case h3 { font-size: 1.6rem; line-height: 1.15; color: var(--navy); }
+.case p { color: var(--muted); }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { font-size: .75rem; font-weight: 600; padding: 4px 10px; border-radius: 99px; background: var(--accent-soft); color: var(--navy); }
+.case .go { font-weight: 700; color: var(--fusion); }
+.case .art { background-color: var(--canvas); background-image: radial-gradient(var(--canvas-dot) 1.2px, transparent 1.3px); background-size: 18px 18px; display: grid; place-items: center; padding: 24px; min-height: 260px; }
+.case .art svg { width: 100%; max-width: 420px; height: auto; }
+.next { margin-top: 16px; display: flex; align-items: center; gap: 12px; padding: 18px 22px; border: 1px dashed var(--line); border-radius: 14px; color: var(--muted); font-size: .95rem; }
+.next .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--fusion); flex: none; }
+
+
+.verify { font-size: .82rem; font-weight: 700; color: var(--fusion); text-decoration: none; margin-top: 2px; }
+.verify:hover { text-decoration: underline; }
+/* quotes */
+.quotes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.quote { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 26px 26px 22px; display: grid; gap: 18px; align-content: space-between; min-width: 0; position: relative; }
+.quote.lead { grid-column: 1 / -1; background-color: var(--canvas); background-image: radial-gradient(var(--canvas-dot) 1.2px, transparent 1.3px); background-size: 22px 22px; border-color: var(--canvas); }
+.quote blockquote { margin: 0; font-size: 1.02rem; line-height: 1.65; color: var(--ink); }
+.quote.lead blockquote { font-size: 1.18rem; color: var(--canvas-ink); }
+.quote blockquote::before { content: "\201C"; display: block; font-family: var(--font-display); font-weight: 800; font-size: 3.4rem; line-height: .6; color: var(--fusion); margin-bottom: 10px; }
+.who { display: grid; gap: 2px; padding-top: 14px; border-top: 1px solid var(--line); }
+.quote.lead .who { border-top-color: var(--canvas-dot); }
+.who b { font-size: .98rem; }
+.quote.lead .who b { color: var(--canvas-ink); }
+.who span { font-size: .85rem; color: var(--muted); }
+.quote.lead .who span { color: var(--canvas-muted); }
+.more-link { margin-top: 14px; font-weight: 700; font-size: .92rem; color: var(--fusion); text-decoration: none; display: inline-block; }
+.more-link:hover { text-decoration: underline; }
+@media (max-width: 860px) { .quotes { grid-template-columns: 1fr; } }
+
+/* toolkit */
+.kit { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.kit > div:not(.skills) { grid-column: 1; }
+.kit .skills { grid-column: 2; grid-row: 1 / span 3; background: var(--canvas); border-color: var(--canvas); align-content: start; }
+.kit .skills h3 { color: var(--canvas-ink); }
+.kit .skills .chips { display: grid; gap: 0; }
+.skill { display: flex; align-items: center; gap: 12px; font-size: .95rem; font-weight: 600; padding: 11px 0; border-bottom: 1px solid var(--canvas-dot); color: var(--canvas-ink); }
+.skill:last-child { border-bottom: 0; }
+.skill::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--fusion); flex: none; }
+.kit > div { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 22px; display: grid; gap: 14px; align-content: start; }
+.kit h3 { font-size: 1.1rem; color: var(--navy); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: inline-flex; align-items: center; gap: 8px; font-size: .88rem; font-weight: 600; padding: 6px 12px 6px 6px; border-radius: 99px; border: 1px solid var(--line); background: var(--bg); }
+.chip i { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-style: normal; font-family: var(--font-mono); font-size: .62rem; font-weight: 600; color: #fff; background: var(--accent); }
+.chip.f i { background: var(--fusion); }
+
+/* background */
+.bg-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 16px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 22px 24px; display: grid; gap: 4px; align-content: start; }
+.panel h3 { font-size: .8rem; font-family: var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.row { display: grid; grid-template-columns: 1fr auto; gap: 2px 16px; padding: 12px 0; border-top: 1px solid var(--line); }
+.row:first-of-type { border-top: 0; }
+.row b { font-weight: 700; }
+.row .when { font-size: .85rem; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.row .where { grid-column: 1 / -1; color: var(--muted); font-size: .9rem; }
+.badge { display: flex; gap: 14px; align-items: center; padding: 12px 0; border-top: 1px solid var(--line); }
+.badge:first-of-type { border-top: 0; }
+.badge .seal { width: 44px; height: 44px; border-radius: 50%; flex: none; display: grid; place-items: center; background: var(--fusion-soft); color: var(--fusion); font-family: var(--font-display); font-weight: 800; }
+.badge div { display: grid; }
+.badge span { color: var(--muted); font-size: .85rem; }
+
+/* contact */
+.contact { background-color: var(--canvas); background-image: radial-gradient(var(--canvas-dot) 1.2px, transparent 1.3px); background-size: 22px 22px; color: var(--canvas-ink); border-radius: 22px; padding: 44px 36px; display: grid; gap: 18px; }
+.contact .mono { color: var(--fusion); }
+.contact h2 { font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.02; font-weight: 800; color: var(--canvas-ink); }
+.contact .line { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.contact code { font-family: var(--font-mono); font-size: 1rem; user-select: all; padding: 10px 16px; border-radius: 99px; background: rgba(255,255,255,.06); border: 1px solid var(--canvas-dot); }
+.copy { font: inherit; font-weight: 700; font-size: .9rem; padding: 10px 18px; border-radius: 99px; border: 0; background: var(--fusion); color: #fff; cursor: pointer; }
+.contact a { color: var(--canvas-ink); font-weight: 700; }
+footer { padding-block: 0 40px; color: var(--muted); font-size: .85rem; }
+
+@media (max-width: 860px) {
+  .hero-grid { grid-template-columns: 1fr; margin-top: 32px; }
+  .stats-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stat:nth-child(2) { border-right: 0; }
+  .stat:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+  .case { grid-template-columns: 1fr; }
+  .case .art { min-height: 200px; order: -1; }
+  .kit { grid-template-columns: 1fr; }
+  .kit > div:not(.skills), .kit .skills { grid-column: auto; grid-row: auto; }
+  .bg-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 420px) { .contact { padding: 32px 20px; } .case .txt { padding: 24px; } }
+@media (prefers-reduced-motion: reduce) { .case { transition: none; } .case:hover { transform: none; } }
+</style>
+</head>
+<body>
+
+
+<header class="hero gutter">
+  <div class="inner">
+    <div class="bar">
+      <span class="mono">Scenario · Marketing Operations</span>
+      <span class="status mono"><i></i>Open to new roles</span>
+    </div>
+
+    <div class="hero-grid">
+      <div>
+        <h1>Syarizan<br><span>Aziz.</span></h1>
+        <div class="role">Marketing Operations &amp; Automation Specialist</div>
+        <p class="lead">I build the workflows and automations that keep marketing teams moving. 4 years supporting US enterprise clients in Adobe Workfront, Adobe Workfront Fusion and their campaign platforms.</p>
+        <div class="actions">
+          <a class="btn primary" href="case-01.html">See my work →</a>
+          <a class="btn ghost" href="#contact">Get in touch</a>
+        </div>
+      </div>
+
+      <svg class="flow" viewBox="0 0 480 380" role="img" aria-label="A Fusion-style scenario: Syarizan connects to request intake, a router, Adobe Workfront and campaign platforms, ending in a launched campaign.">
+        <defs>
+          <clipPath id="face"><circle cx="90" cy="110" r="52"/></clipPath>
+        </defs>
+        <path id="w1" class="wire" d="M142 110 C190 110 200 110 236 110"/>
+        <path id="w2" class="wire" d="M300 110 C340 110 360 160 380 196"/>
+        <path id="w3" class="wire" d="M268 142 C268 200 230 236 196 260"/>
+        <path id="w4" class="wire" d="M380 260 C360 300 330 300 300 300"/>
+        <path id="w5" class="wire" d="M164 290 C210 300 236 300 268 300"/>
+
+        <!-- me -->
+        <circle cx="90" cy="110" r="58" fill="none" stroke="var(--fusion)" stroke-width="3"/>
+        <image href="me.png" x="38" y="58" width="104" height="104" clip-path="url(#face)" preserveAspectRatio="xMidYMid slice"/>
+        <circle cx="134" cy="66" r="13" fill="var(--fusion)"/>
+        <text x="134" y="70.5" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="JetBrains Mono, monospace">1</text>
+        <text class="lbl" x="90" y="194" text-anchor="middle">Syarizan</text>
+        <text class="sub" x="90" y="210" text-anchor="middle">TRIGGER</text>
+
+        <!-- intake -->
+        <circle cx="268" cy="110" r="32" fill="var(--fusion)"/>
+        <path d="M256 100 h24 v20 h-24 z M256 100 l12 10 l12 -10" fill="none" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/>
+        <text class="lbl" x="268" y="166" text-anchor="middle" dy="-4">Requests</text>
+        <text class="sub" x="268" y="62" text-anchor="middle">WATCH</text>
+
+        <!-- workfront -->
+        <circle cx="400" cy="228" r="32" fill="var(--accent)"/>
+        <path d="M388 220 h24 M388 228 h18 M388 236 h22" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+        <text class="lbl" x="400" y="284" text-anchor="middle" dy="-2">Workfront</text>
+
+        <!-- router -->
+        <circle cx="164" cy="268" r="26" fill="none" stroke="var(--canvas-muted)" stroke-width="2"/>
+        <path d="M152 268 h10 l8 -8 h6 M162 268 l8 8 h6" fill="none" stroke="var(--canvas-ink)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <text class="sub" x="164" y="318" text-anchor="middle">ROUTER</text>
+
+        <!-- campaign -->
+        <circle cx="268" cy="300" r="32" fill="var(--live)"/>
+        <path d="M256 300 l8 8 l16 -16" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <text class="lbl" x="268" y="356" text-anchor="middle">Campaign live</text>
+
+        <!-- bundles -->
+        <circle class="bundle" r="5"><animateMotion dur="2.4s" repeatCount="indefinite"><mpath href="#w1"/></animateMotion></circle>
+        <circle class="bundle" r="5" visibility="hidden"><set attributeName="visibility" to="visible" begin="0.8s"/><animateMotion dur="2.4s" begin="0.8s" repeatCount="indefinite"><mpath href="#w2"/></animateMotion></circle>
+        <circle class="bundle" r="5" visibility="hidden"><set attributeName="visibility" to="visible" begin="1.2s"/><animateMotion dur="2.4s" begin="1.2s" repeatCount="indefinite"><mpath href="#w3"/></animateMotion></circle>
+        <circle class="bundle" r="5" visibility="hidden"><set attributeName="visibility" to="visible" begin="1.6s"/><animateMotion dur="2.4s" begin="1.6s" repeatCount="indefinite"><mpath href="#w4"/></animateMotion></circle>
+        <circle class="bundle" r="5" visibility="hidden"><set attributeName="visibility" to="visible" begin="2s"/><animateMotion dur="2.4s" begin="2s" repeatCount="indefinite"><mpath href="#w5"/></animateMotion></circle>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<div class="stats gutter">
+  <div class="inner stats-row">
+    <div class="stat"><b>4</b><span>years in marketing ops</span></div>
+    <div class="stat"><b>5</b><span>Fusion scenarios built</span></div>
+    <div class="stat"><b>121</b><span>Workfront templates created</span></div>
+    <div class="stat"><b>2×</b><span>Adobe Certified Professional</span></div>
+  </div>
+</div>
+
+<main class="gutter">
+  <div class="inner">
+
+    <section>
+      <div class="sec-head">
+        <span class="mono">Selected work</span>
+        <h2>Case studies</h2>
+      </div>
+      <a class="case" href="case-01.html">
+        <div class="txt">
+          <span class="num">01</span>
+          <h3>Turning marketing requests into ready-to-run projects</h3>
+          <p>Five Adobe Workfront Fusion scenarios that replaced daily manual project setup for 20–30 requests a week across 20+ request types.</p>
+          <div class="tags">
+            <span class="tag">Adobe Workfront Fusion</span>
+            <span class="tag">Adobe Workfront</span>
+            <span class="tag">Process automation</span>
+          </div>
+          <span class="go">Read case study →</span>
+        </div>
+        <div class="art" aria-hidden="true">
+          <svg viewBox="0 0 400 200">
+            <g fill="none" stroke="#8FA3BD" stroke-width="2" stroke-dasharray="2 7" stroke-linecap="round">
+              <path d="M70 100 H140"/><path d="M196 100 C230 100 230 50 262 50"/><path d="M196 100 H262"/><path d="M196 100 C230 100 230 150 262 150"/><path d="M318 50 C340 50 340 100 350 100"/><path d="M318 100 H350"/><path d="M318 150 C340 150 340 100 350 100"/>
+            </g>
+            <circle cx="44" cy="100" r="26" fill="#F26B1D"/>
+            <circle cx="168" cy="100" r="26" fill="none" stroke="#8FA3BD" stroke-width="2"/>
+            <circle cx="290" cy="50" r="22" fill="#2E6DA4"/>
+            <circle cx="290" cy="100" r="22" fill="#2E6DA4"/>
+            <circle cx="290" cy="150" r="22" fill="#2E6DA4"/>
+            <circle cx="372" cy="100" r="22" fill="#33C27F"/>
+            <g font-family="JetBrains Mono, monospace" font-size="10" fill="#EAF1FA" text-anchor="middle" font-weight="600">
+              <text x="44" y="104">IN</text><text x="168" y="104">ROUTE</text><text x="290" y="54">STD</text><text x="290" y="104">WEB</text><text x="290" y="154">TRN</text><text x="372" y="104">✓</text>
+            </g>
+          </svg>
+        </div>
+      </a>
+      <a class="case" href="case-02.html" style="margin-top:16px">
+        <div class="txt">
+          <span class="num">02</span>
+          <h3>Teaching anyone to find website problems with session replays</h3>
+          <p>Training videos and a model answer I made for a team project that placed 3rd in an internal operations competition.</p>
+          <div class="tags">
+            <span class="tag">Mouseflow</span>
+            <span class="tag">Website optimization</span>
+            <span class="tag">Training</span>
+          </div>
+          <span class="go">Read case study →</span>
+        </div>
+        <div class="art" aria-hidden="true">
+          <svg viewBox="0 0 400 200">
+            <rect x="60" y="30" width="280" height="140" rx="10" fill="none" stroke="#8FA3BD" stroke-width="2"/>
+            <rect x="60" y="30" width="280" height="22" rx="10" fill="#23395A"/>
+            <circle cx="76" cy="41" r="4" fill="#F26B1D"/><circle cx="90" cy="41" r="4" fill="#8FA3BD"/><circle cx="104" cy="41" r="4" fill="#8FA3BD"/>
+            <rect x="80" y="70" width="120" height="10" rx="5" fill="#23395A"/>
+            <rect x="80" y="90" width="90" height="10" rx="5" fill="#23395A"/>
+            <rect x="80" y="120" width="70" height="26" rx="13" fill="#2E6DA4"/>
+            <path d="M80 160 C140 110 200 150 250 95 S310 80 300 128" fill="none" stroke="#F26B1D" stroke-width="2.5" stroke-dasharray="3 6" stroke-linecap="round"/>
+            <circle cx="300" cy="128" r="12" fill="none" stroke="#F26B1D" stroke-width="2.5"/>
+            <circle cx="300" cy="128" r="4" fill="#F26B1D"/>
+            <path d="M296 138 l0 22 l6 -6 l6 10" fill="#EAF1FA" stroke="#0F1E33" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </a>
+      <div class="next"><span class="dot"></span>Next up: an AI-powered marketing automation I am building myself.</div>
+    </section>
+
+    <section>
+      <div class="sec-head">
+        <span class="mono">Recommendations</span>
+        <h2>What colleagues say</h2>
+      </div>
+      <div class="quotes">
+        <figure class="quote lead">
+          <blockquote>He's been my trusted go-to for Workfront reports, crafting specialized, tailored reports using text mode that deliver exactly what's needed. Compared to his peers, Syarizan demonstrates a level of maturity that stands out, especially in his ability to develop clear and thoughtful SOPs that improve team efficiency.</blockquote>
+          <figcaption class="who"><b>Denise Teo</b><span>Marketing Operations Specialist · worked on the same team</span></figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote>What stands out is his strong technical expertise across platforms such as HubSpot, Marketo, and Workfront. His willingness to share knowledge, problem-solving skills, and ability to adapt make him a valuable asset to any MarOps team.</blockquote>
+          <figcaption class="who"><b>Iman Nabilah</b><span>Marketing, Tech &amp; Business Operations · junior colleague</span></figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote>He's one of the most organized, detail-oriented, and patient colleagues I know. He has a natural knack for spotting patterns, troubleshooting complex issues, and keeping projects on track.</blockquote>
+          <figcaption class="who"><b>Hazirah Harith</b><span>Marketing Operations · worked on the same team</span></figcaption>
+        </figure>
+      </div>
+      <a class="more-link" href="https://www.linkedin.com/in/syarizan-aziz/details/recommendations/" target="_blank" rel="noopener">Read the full recommendations on LinkedIn →</a>
+    </section>
+
+    <section>
+      <div class="sec-head">
+        <span class="mono">Toolkit</span>
+        <h2>Tools &amp; skills</h2>
+      </div>
+      <div class="kit">
+        <div>
+          <h3>Work management &amp; automation</h3>
+          <div class="chips">
+            <span class="chip"><i>WF</i>Adobe Workfront</span>
+            <span class="chip f"><i>FU</i>Adobe Workfront Fusion</span>
+          </div>
+        </div>
+        <div>
+          <h3>Marketing automation &amp; CRM</h3>
+          <div class="chips">
+            <span class="chip"><i>AC</i>Adobe Campaign Classic</span>
+            <span class="chip"><i>MK</i>Adobe Marketo Engage</span>
+            <span class="chip"><i>HS</i>HubSpot</span>
+            <span class="chip"><i>AE</i>Account Engagement (Pardot)</span>
+            <span class="chip"><i>SF</i>Salesforce CRM</span>
+          </div>
+        </div>
+        <div>
+          <h3>Web &amp; analytics</h3>
+          <div class="chips">
+            <span class="chip"><i>WP</i>WordPress</span>
+            <span class="chip"><i>&lt;/&gt;</i>HTML/CSS</span>
+            <span class="chip"><i>GA</i>Google Analytics</span>
+            <span class="chip"><i>MF</i>Mouseflow</span>
+          </div>
+        </div>
+        <div class="skills">
+          <h3>What I do with them</h3>
+          <div class="chips">
+            <span class="skill">Automation scenario design</span>
+            <span class="skill">Workflow &amp; template design</span>
+            <span class="skill">Form &amp; template mapping</span>
+            <span class="skill">Dashboards &amp; reporting</span>
+            <span class="skill">Email build &amp; deployment</span>
+            <span class="skill">Landing pages &amp; forms</span>
+            <span class="skill">Email segmentation</span>
+            <span class="skill">Lead lifecycle management</span>
+            <span class="skill">SOP writing</span>
+            <span class="skill">User onboarding</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-head">
+        <span class="mono">Background</span>
+        <h2>Experience &amp; credentials</h2>
+      </div>
+      <div class="bg-grid">
+        <div class="panel">
+          <h3>Experience</h3>
+          <div class="row"><b>Marketing Operations Specialist</b><span class="when">Aug 2023 – Oct 2026</span><span class="where">2X Marketing Sdn. Bhd.</span></div>
+          <div class="row"><b>Marketing Operations Associate</b><span class="when">Jun 2022 – Aug 2023</span><span class="where">2X Marketing Sdn. Bhd.</span></div>
+          <div class="row"><b>Digital Marketing Intern</b><span class="when">Sep 2021 – Feb 2022</span><span class="where">HimVentures Sdn. Bhd.</span></div>
+          <div class="row"><b>Bachelor of Information Technology (Hons.)</b><span class="when">2022</span><span class="where">Universiti Teknologi MARA (UiTM), Shah Alam</span></div>
+        </div>
+        <div class="panel">
+          <h3>Certifications &amp; awards</h3>
+          <div class="badge"><span class="seal">A</span><div><b>Workfront Core Developer</b><span>Adobe Certified Professional · 2023 · active until Oct 2027</span><a class="verify" href="https://certification.adobe.com/credential/verify/ddec0330-f701-48cb-8e20-c88e963da220" target="_blank" rel="noopener">Verify credential ↗</a></div></div>
+          <div class="badge"><span class="seal">A</span><div><b>Marketo Engage Business Practitioner</b><span>Adobe Certified Professional · 2023 · active until Oct 2027</span><a class="verify" href="https://certification.adobe.com/credential/verify/3041f92d-4e32-4d64-8537-ac090f8d0ce9" target="_blank" rel="noopener">Verify credential ↗</a></div></div>
+          <div class="badge"><span class="seal">3</span><div><b>3rd Place, Project Ops Citadel</b><span>Website optimization module · 2023</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="contact">
+      <span class="mono">Final module</span>
+      <h2>Let's connect your marketing stack.</h2>
+      <div class="line">
+        <code id="email">syarizanaziz99@gmail.com</code>
+        <button class="copy" id="copy-email" type="button">Copy email</button>
+        <a href="https://linkedin.com/in/syarizan-aziz" target="_blank" rel="noopener">LinkedIn →</a>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer class="gutter"><div class="inner">© 2026 Syarizan Aziz · Puchong, Selangor</div></footer>
+
+<script>
+document.getElementById('copy-email').addEventListener('click', function () {
+  var btn = this, el = document.getElementById('email');
+  function done() { btn.textContent = 'Copied ✓'; setTimeout(function () { btn.textContent = 'Copy email'; }, 1800); }
+  function fallback() {
+    var r = document.createRange(); r.selectNodeContents(el);
+    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+    btn.textContent = 'Selected';
+  }
+  try { navigator.clipboard.writeText(el.textContent).then(done, fallback); } catch (e) { fallback(); }
+});
+</script>
+
+</body>
+</html>

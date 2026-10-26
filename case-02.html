@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Session Replay Training</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: single reading column, case-study sections, one wide Fusion-style scenario diagram */
+:root {
+  --bg: #F6F8FB;
+  --surface: #FFFFFF;
+  --ink: #14243A;
+  --muted: #56657A;
+  --line: #D8E0EA;
+  --navy: #1F3A5F;
+  --accent: #2E6DA4;
+  --accent-soft: #E3EDF7;
+  --wf: #F26B1D;        /* Workfront-ish orange for module bubbles */
+  --wf-soft: #FDEBDD;
+  --ok: #1E7B4F;
+  --ok-soft: #E2F3EA;
+  --warn: #B4471F;
+  --warn-soft: #FBE7DF;
+  --canvas: #0F1E33; --canvas-ink: #EAF1FA; --canvas-muted: #8FA3BD; --canvas-dot: #23395A; --live: #33C27F;
+  --font-display: "Bricolage Grotesque", "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E1622; --surface: #152132; --ink: #E6EDF6; --muted: #9AABC0; --line: #263649;
+    --navy: #9CC2EA; --accent: #6FA8DC; --accent-soft: #1B2D44;
+    --wf: #FF8A4C; --wf-soft: #3A2418; --ok: #5CC795; --ok-soft: #15301F; --warn: #F08A64; --warn-soft: #3A1E15;
+    --canvas: #08111F; --canvas-ink: #EAF1FA; --canvas-muted: #8FA3BD; --canvas-dot: #1A2B45; --live: #46D392;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --canvas: #08111F; --canvas-ink: #EAF1FA; --canvas-muted: #8FA3BD; --canvas-dot: #1A2B45; --live: #46D392;
+  --bg: #0E1622; --surface: #152132; --ink: #E6EDF6; --muted: #9AABC0; --line: #263649;
+  --navy: #9CC2EA; --accent: #6FA8DC; --accent-soft: #1B2D44;
+  --wf: #FF8A4C; --wf-soft: #3A2418; --ok: #5CC795; --ok-soft: #15301F; --warn: #F08A64; --warn-soft: #3A1E15;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; padding-block: env(safe-area-inset-top, 0px) env(safe-area-inset-bottom, 0px); }
+.back { font-size: .9rem; font-weight: 600; text-decoration: none; }
+.back:hover { text-decoration: underline; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.65;
+}
+.gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.inner { max-width: 860px; margin: 0 auto; }
+.wrap > .inner { padding-block: 64px; display: grid; gap: 64px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; color: var(--ink); }
+p { margin: 0; max-width: 68ch; }
+a { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* top bar */
+.top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+.me { display: flex; flex-direction: column; }
+.me b { font-size: 1.05rem; letter-spacing: .01em; }
+.me span { color: var(--muted); font-size: .9rem; }
+.links { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: .9rem; color: var(--muted); }
+.links code { font-family: var(--font-mono); font-size: .82rem; color: var(--ink); user-select: all; }
+
+/* hero */
+.hero { display: grid; gap: 18px; }
+.eyebrow { font-family: var(--font-mono); font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--wf); font-weight: 600; }
+.hero h1 { font-size: clamp(2rem, 5vw, 3rem); line-height: 1.12; font-weight: 800; color: var(--navy); }
+.lede { font-size: 1.15rem; color: var(--muted); }
+.meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin-top: 8px; }
+.meta div { background: var(--surface); padding: 14px 16px; display: grid; gap: 2px; min-width: 0; }
+.meta dt { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.meta dd { margin: 0; font-weight: 600; font-size: .95rem; }
+.stats { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 4px; }
+.stat { display: grid; }
+.stat b { font-size: 2rem; font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; line-height: 1.1; }
+.stat span { font-size: .85rem; color: var(--muted); }
+
+/* sections */
+section { display: grid; gap: 16px; }
+section > h2 { font-size: 1.45rem; font-weight: 700; display: flex; align-items: baseline; gap: 12px; }
+section > h2 small { font-family: var(--font-mono); font-size: .75rem; color: var(--muted); font-weight: 400; }
+
+/* before / after */
+.ba { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.ba > div { padding: 18px 20px; border-radius: 10px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.ba .before { background: var(--warn-soft); }
+.ba .after { background: var(--ok-soft); }
+.ba h3 { font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; }
+.ba .before h3 { color: var(--warn); }
+.ba .after h3 { color: var(--ok); }
+.ba ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+
+/* scenarios list */
+.scen { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.scen article { display: grid; grid-template-columns: 2.4rem 1fr auto; gap: 4px 14px; padding: 16px 0; border-bottom: 1px solid var(--line); align-items: start; }
+.bubble { width: 2.2rem; height: 2.2rem; border-radius: 50%; background: var(--wf-soft); color: var(--wf); display: grid; place-items: center; font-family: var(--font-mono); font-weight: 600; font-size: .85rem; }
+.scen h3 { font-size: 1.02rem; font-weight: 700; }
+.scen p { grid-column: 2 / 4; color: var(--muted); font-size: .95rem; }
+.pill { font-size: .72rem; font-weight: 600; padding: 3px 10px; border-radius: 99px; white-space: nowrap; }
+.pill.live { background: var(--ok-soft); color: var(--ok); }
+.pill.retired { background: var(--line); color: var(--muted); }
+
+/* diagram */
+.diagram { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; overflow-x: auto; }
+.diagram svg { display: block; min-width: 760px; width: 100%; height: auto; }
+.diagram svg text { font-family: var(--font-body); }
+.cap { font-size: .85rem; color: var(--muted); }
+
+/* decisions */
+.dec { display: grid; gap: 14px; }
+.dec article { display: grid; gap: 6px; padding: 18px 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.dec h3 { font-size: 1.02rem; }
+.dec code, .mono { font-family: var(--font-mono); font-size: .85em; background: var(--accent-soft); color: var(--navy); padding: 1px 6px; border-radius: 4px; }
+
+/* mapping sample */
+.tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; min-width: 520px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+th { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+tr:last-child td { border-bottom: 0; }
+td.id { font-family: var(--font-mono); font-size: .8rem; color: var(--muted); }
+
+.note { font-size: .85rem; color: var(--muted); border-left: 3px solid var(--line); padding-left: 12px; }
+footer { border-top: 1px solid var(--line); padding-top: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; color: var(--muted); font-size: .9rem; }
+
+@media (max-width: 520px) {
+  .scen article { grid-template-columns: 2.4rem 1fr; }
+  .scen .pill { grid-column: 2; justify-self: start; }
+  .scen p { grid-column: 1 / -1; }
+}
+
+/* ---- canvas hero ---- */
+.hero-band { background-color: var(--canvas); color: var(--canvas-ink); background-image: radial-gradient(var(--canvas-dot) 1.2px, transparent 1.3px); background-size: 22px 22px; padding-block: 24px 72px; }
+.hero-band .inner { display: grid; gap: 22px; }
+.hero-band .top { color: var(--canvas-muted); }
+.hero-band .me span { color: var(--canvas-muted); }
+.hero-band .back { color: var(--canvas-ink); }
+.hero-band .links { color: var(--canvas-muted); }
+.hero-band .links code { color: var(--canvas-ink); }
+.hero-band .links a { color: var(--canvas-ink); }
+.hero-band .eyebrow { color: var(--wf); margin-top: 28px; }
+.hero-band h1 { color: var(--canvas-ink); font-size: clamp(2.3rem, 6vw, 3.8rem); line-height: 1.02; font-weight: 800; }
+.hero-band h1 em { font-style: normal; color: var(--wf); }
+.hero-band .lede { color: var(--canvas-muted); }
+.hero-band .meta { background: var(--canvas-dot); border-color: var(--canvas-dot); }
+.hero-band .meta div { background: rgba(255,255,255,.03); }
+.hero-band .meta dt { color: var(--canvas-muted); }
+.hero-band .meta dd { color: var(--canvas-ink); }
+.strip { margin-top: -36px; position: relative; }
+.strip .stats { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; box-shadow: 0 12px 30px -18px rgba(15,30,51,.45); margin: 0 auto; }
+.strip .stat { padding: 18px 20px; border-right: 1px solid var(--line); min-width: 0; }
+.strip .stat:last-child { border-right: 0; }
+.strip .stat b { font-family: var(--font-display); font-size: 2.2rem; color: var(--navy); }
+section > h2 { font-size: clamp(1.5rem, 3.4vw, 2rem); font-weight: 800; }
+.diagram { background-color: var(--canvas); background-image: radial-gradient(var(--canvas-dot) 1.2px, transparent 1.3px); background-size: 20px 20px; border: 0; border-radius: 16px; padding: 20px; }
+.diagram .lbl { fill: var(--canvas-ink); font-weight: 700; font-size: 13px; }
+.diagram .sub { fill: var(--canvas-muted); font-size: 11px; }
+.diagram .wire { fill: none; stroke: var(--canvas-muted); stroke-width: 2; stroke-dasharray: 2 7; stroke-linecap: round; }
+.bundle { fill: var(--wf); }
+.bubble { background: var(--wf); color: #fff; }
+@media (prefers-reduced-motion: reduce) { .bundle { display: none; } }
+@media (max-width: 640px) {
+  .strip .stats { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .strip .stat:nth-child(2) { border-right: 0; }
+  .strip .stat:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+}
+
+/* ---- case 02 extras ---- */
+.steps { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; }
+.step { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.step .n { width: 2rem; height: 2rem; border-radius: 50%; background: var(--wf); color: #fff; display: grid; place-items: center; font-family: var(--font-mono); font-weight: 600; font-size: .85rem; }
+.step h3 { font-size: 1rem; }
+.step p { font-size: .9rem; color: var(--muted); }
+.made { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
+.made article { background-color: var(--canvas); background-image: radial-gradient(var(--canvas-dot) 1.2px, transparent 1.3px); background-size: 18px 18px; color: var(--canvas-ink); border-radius: 14px; padding: 20px; display: grid; gap: 8px; align-content: start; }
+.made .kind { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--wf); font-weight: 600; }
+.made h3 { color: var(--canvas-ink); font-size: 1.1rem; }
+.made p { color: var(--canvas-muted); font-size: .92rem; }
+.made .len { font-family: var(--font-mono); font-size: .8rem; color: var(--canvas-ink); }
+.finds { display: grid; gap: 12px; }
+.find { display: grid; grid-template-columns: 9.5rem 1fr; gap: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
+.find .seg { display: grid; gap: 2px; align-content: start; font-size: .82rem; color: var(--muted); }
+.find .seg b { font-family: var(--font-mono); font-size: .85rem; color: var(--ink); }
+.find ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.find li { display: grid; grid-template-columns: 8.2rem minmax(0, 1fr); gap: 12px; align-items: baseline; }
+.find li .tagp { justify-self: start; }
+.tagp { flex: none; font-size: .68rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; }
+.tagp.tech { background: var(--warn-soft); color: var(--warn); }
+.tagp.ux { background: var(--accent-soft); color: var(--navy); }
+.learn { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
+.learn article { padding: 18px 20px; border-top: 3px solid var(--wf); background: var(--surface); border-radius: 0 0 12px 12px; display: grid; gap: 6px; align-content: start; }
+.learn h3 { font-size: 1rem; }
+.learn p { font-size: .92rem; color: var(--muted); }
+@media (max-width: 760px) {
+  .steps, .made, .learn { grid-template-columns: 1fr; }
+  .find { grid-template-columns: 1fr; gap: 10px; }
+}
+</style>
+<script>
+try { history.scrollRestoration = 'manual'; } catch (e) {}
+(function () {
+  function top() { window.scrollTo(0, 0); }
+  top();
+  document.addEventListener('DOMContentLoaded', top);
+  window.addEventListener('load', function () { top(); setTimeout(top, 60); setTimeout(top, 250); });
+})();
+</script>
+</head>
+<body>
+
+<div class="hero-band gutter">
+<div class="inner">
+<header class="top">
+    <div class="me">
+      <a class="back" href="index.html">← Syarizan Aziz</a>
+      <span>Marketing Operations &amp; Automation</span>
+    </div>
+    <div class="links">
+      <span>Email <code>syarizanaziz99@gmail.com</code></span>
+      <a href="https://linkedin.com/in/syarizan-aziz" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </header>
+<div class="eyebrow">Case study 02 · Project Ops Citadel</div>
+    <h1>Teaching anyone to find website problems with <em>session replays.</em></h1>
+    <p class="lede">For an internal operations competition, our team of five built a website optimization module. I created the session replay part: two training videos and a worked model answer that show how to turn visitor recordings into clear, evidence-backed fixes.</p>
+    <dl class="meta">
+      <div><dt>My role</dt><dd>Session replay analysis: training videos &amp; model answer</dd></div>
+      <div><dt>Team</dt><dd>5 people</dd></div>
+      <div><dt>Tools</dt><dd>Mouseflow, Excel</dd></div>
+      <div><dt>Result</dt><dd>3rd place, judged by managers</dd></div>
+    </dl>
+</div>
+</div>
+<div class="strip gutter"><div class="inner"><div class="stats">
+      <div class="stat"><b>2</b><span>training videos</span></div>
+      <div class="stat"><b>~6</b><span>minutes of lessons</span></div>
+      <div class="stat"><b>24</b><span>sessions analysed</span></div>
+      <div class="stat"><b>3rd</b><span>place in competition</span></div>
+    </div></div></div>
+<div class="wrap gutter">
+<div class="inner">
+
+  <section>
+    <h2>The problem</h2>
+    <p>Web analytics tell you <em>what</em> visitors do: how long they stay, where they leave, whether they submit a form. They rarely tell you <em>why</em>. Session replays show the why, because you watch real visits play out. But watching recordings without a method is slow, and two people watching the same recordings often come back with different conclusions.</p>
+    <p>The module needed a way for anyone at the agency, not only analysts, to review replays the same way and come back with findings a team could act on.</p>
+  </section>
+
+  <section>
+    <h2>What I made</h2>
+    <div class="made">
+      <article>
+        <span class="kind">Video 1 · Intro</span>
+        <h3>Why session replay matters</h3>
+        <p>Explains the four uses: understanding user experience, spotting bugs and errors, reading visitor behaviour, and checking usability. Ends with a guide to reading an insight slide.</p>
+        <span class="len">2 min 22 s</span>
+      </article>
+      <article>
+        <span class="kind">Video 2 · Demo</span>
+        <h3>Step-by-step walkthrough</h3>
+        <p>Shows the full process inside Mouseflow: setting filters, watching recordings, logging them in the analysis template and writing up what was found.</p>
+        <span class="len">3 min 54 s</span>
+      </article>
+      <article>
+        <span class="kind">Slides · Model answer</span>
+        <h3>A worked example</h3>
+        <p>A complete analysis of a real website, split into four visitor segments. Learners compare their own findings against it.</p>
+        <span class="len">6 slides</span>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <h2>The method I taught</h2>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><h3>Pick a segment</h3><p>Filter recordings by entry page, pages visited and date range, so every finding is about one kind of visit.</p></div>
+      <div class="step"><span class="n">2</span><h3>Log every recording</h3><p>Record device, entry and exit page, visit length, bounce and form submission in the shared template.</p></div>
+      <div class="step"><span class="n">3</span><h3>Tag the problem</h3><p>Mark each issue as technical (broken or slow) or non-technical (confusing or unclear), so it reaches the right team.</p></div>
+      <div class="step"><span class="n">4</span><h3>Back it with proof</h3><p>Write each insight in one line and link a sample recording that shows it happening.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Findings from the model answer</h2>
+    <p>The worked example analysed a B2B agency's marketing website over six months. Each segment starts from a different entry page.</p>
+    <div class="finds">
+      <div class="find">
+        <div class="seg"><b>Entry: /about</b>3 sessions</div>
+        <ul>
+          <li><span class="tagp tech">Technical</span>The Contact Us button was plain text with no link, so clicks went nowhere.</li>
+          <li><span class="tagp ux">Non-technical</span>Visitors looked for the office address instead of filling in the form.</li>
+        </ul>
+      </div>
+      <div class="find">
+        <div class="seg"><b>Entry: /services</b>6 sessions</div>
+        <ul>
+          <li><span class="tagp tech">Technical</span>The Services page and homepage loaded slowly.</li>
+          <li><span class="tagp ux">Non-technical</span>Visitors spent most of their time on the Services page.</li>
+        </ul>
+      </div>
+      <div class="find">
+        <div class="seg"><b>Entry: /homepage</b>7 sessions</div>
+        <ul>
+          <li><span class="tagp tech">Technical</span>The contact form did not load on desktop and the loading icon kept spinning.</li>
+          <li><span class="tagp ux">Non-technical</span>Only 1 visitor filled in the form. Most used the address and email instead.</li>
+        </ul>
+      </div>
+      <div class="find">
+        <div class="seg"><b>Entry: /contact</b>8 sessions</div>
+        <ul>
+          <li><span class="tagp tech">Technical</span>The contact form did not load on mobile, and the page was slow.</li>
+          <li><span class="tagp ux">Non-technical</span>Visitors spent more time on the homepage, About and Services than on the Contact page.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Sample of the analysis template</h2>
+    <p>Each recording becomes one row. These rows are illustrative, not real visitor data.</p>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Entry page</th><th>Device</th><th>Visit length</th><th>Form sent</th><th>Type</th><th>Observation</th></tr></thead>
+        <tbody>
+          <tr><td>/contact</td><td>Mobile</td><td>30 s – 1 min</td><td>No</td><td>Technical</td><td>Form did not load</td></tr>
+          <tr><td>/about</td><td>Desktop</td><td>3 – 30 s</td><td>No</td><td>Non-technical</td><td>Quick scroll, left shortly</td></tr>
+          <tr><td>/pricing</td><td>Desktop</td><td>1 – 5 min</td><td>No</td><td>Non-technical</td><td>Offer not clear above the fold</td></tr>
+          <tr><td>/signup</td><td>Mobile</td><td>1 – 5 min</td><td>No</td><td>Non-technical</td><td>Left form after password rules</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>What I took away</h2>
+    <div class="learn">
+      <article><h3>Proof beats opinion</h3><p>An insight is easier to act on when there is a recording that shows it happening.</p></article>
+      <article><h3>Split technical from behaviour</h3><p>A broken form goes to developers. An unclear offer goes to content. Tagging early sends each issue to the right place.</p></article>
+      <article><h3>Small samples still help</h3><p>A handful of sessions per segment was enough to find broken forms and slow pages. Bigger samples are needed before judging behaviour trends.</p></article>
+    </div>
+  </section>
+
+  <p class="note">Team project. The analysis template was provided by my team lead. The training videos and model answer are my own work. Company, client and colleague names have been removed.</p>
+
+  <footer>
+    <span>Syarizan Aziz · Marketing Operations &amp; Automation</span>
+    <a href="index.html">Back to all work</a>
+  </footer>
+</div>
+</div>
+
+</body>
+</html>
