@@ -205,6 +205,10 @@ main > .inner { display: grid; gap: 80px; }
 .contact code { font-family: var(--font-mono); font-size: 1rem; user-select: all; padding: 10px 16px; border-radius: 99px; background: rgba(255,255,255,.06); border: 1px solid var(--canvas-dot); }
 .copy { font: inherit; font-weight: 700; font-size: .9rem; padding: 10px 18px; border-radius: 99px; border: 0; background: var(--fusion); color: #fff; cursor: pointer; }
 .contact a { color: var(--canvas-ink); font-weight: 700; }
+.contact .line a.pill { display: inline-flex; align-items: center; padding: 10px 18px; border-radius: 99px; border: 1px solid var(--canvas-muted); color: var(--canvas-ink); font-weight: 700; font-size: .9rem; text-decoration: none; line-height: 1.2; }
+.contact .line a.pill:hover { border-color: var(--fusion); color: var(--fusion); }
+.contact .copy { line-height: 1.2; border: 1px solid var(--fusion); }
+.contact code { line-height: 1.2; }
 footer { padding-block: 0 40px; color: var(--muted); font-size: .85rem; }
 
 @media (max-width: 860px) {
@@ -504,8 +508,8 @@ footer { padding-block: 0 40px; color: var(--muted); font-size: .85rem; }
       <div class="line">
         <code id="email">syarizanaziz99@gmail.com</code>
         <button class="copy" id="copy-email" type="button">Copy email</button>
-        <a href="https://linkedin.com/in/syarizan-aziz" target="_blank" rel="noopener">LinkedIn →</a>
-        <a href="Syarizan_Aziz_Resume.pdf" download>Resume (PDF) ↓</a>
+        <a class="pill" href="https://linkedin.com/in/syarizan-aziz" target="_blank" rel="noopener">LinkedIn →</a>
+        <a class="pill" href="Syarizan_Aziz_Resume.pdf" download>Download resume ↓</a>
       </div>
     </section>
 
